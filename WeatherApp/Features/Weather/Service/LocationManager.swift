@@ -10,8 +10,10 @@ import CoreLocation
 
 class LocationManager: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
+    
     @Published var currentLocation: CLLocation?
     @Published var authorizationStatus: CLAuthorizationStatus?
+    @Published var error: String?
     
     override init() {
         super.init()
@@ -33,7 +35,9 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Failed to get location: \(error.localizedDescription)")
+        if !error.localizedDescription.contains("error 1") {
+            self.error = error.localizedDescription
+        }
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

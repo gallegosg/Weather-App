@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SideMenuRow: View {
+struct LocationRow: View {
     var location: FavoriteLocation
     var body: some View {
         HStack(alignment: .center) {
@@ -17,11 +17,13 @@ struct SideMenuRow: View {
                 .font(.subheadline)
             Spacer()
         }
-        .padding(.leading)
         .frame(height: 40)
+        .padding()
+        .background(Color.white.opacity(0.2))
+        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
     }
 }
 
 #Preview {
-    SideMenuRow(location: FavoriteLocation(name: "San Francisco, CA", region: "California", country: "US"))
+    LocationRow(location: FavoriteLocation(name: "San Francisco", region: "California", country: "US"))
 }

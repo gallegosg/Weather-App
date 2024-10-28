@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SideMenuCurrentLocationRow: View {
+struct CurrentLocationRow: View {
     var body: some View {
         HStack(alignment: .center) {
             Image(systemName: "location.fill")
@@ -17,10 +17,9 @@ struct SideMenuCurrentLocationRow: View {
             Spacer()
         }
         .padding(.leading)
-        .frame(height: 40)
     }
 }
 
 #Preview {
-    SideMenuCurrentLocationRow()
+    CurrentLocationRow()
 }

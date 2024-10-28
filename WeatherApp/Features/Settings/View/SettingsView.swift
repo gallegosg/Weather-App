@@ -9,7 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject var vm: WeatherViewModel
-    @StateObject private var settingsViewModel = SettingsViewModel()
+    @EnvironmentObject private var settings: SettingsViewModel
+    var units: [String] = ["C", "F"]
     
     var body: some View {
         List {
@@ -26,8 +27,9 @@ struct SettingsView: View {
                 Text("Units")
                 Spacer()
                 HStack {
-                    UnitButton(selectedUnit: settingsViewModel.selectedUnit, unit: "C")
-                    UnitButton(selectedUnit: settingsViewModel.selectedUnit, unit: "F")
+                    ForEach (units, id: \.self) { unit in
+                        UnitButton(selectedUnit: settings.selectedUnit, unit: unit)
+                    }
                 }
                 .background(Color.accentColor)
                 .overlay(
@@ -36,13 +38,13 @@ struct SettingsView: View {
                 )
             }
         }
+        .background(Color.blue.opacity(0.1))
+        .scrollContentBackground(.hidden)
         .navigationTitle("Settings")
-        .onAppear {
-            vm.showMenu = false
-        }
     }
 }
 
 #Preview {
     SettingsView(vm: WeatherViewModel(service: WeatherService(), locationManager: LocationManager()))
+        .environmentObject(SettingsViewModel())
 }

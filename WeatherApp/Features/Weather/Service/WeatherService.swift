@@ -7,9 +7,7 @@
 
 import Foundation
 
-struct WeatherService {
-    
-    //function to hit api using async await
+struct WeatherService {    
     func fetchCurrentWeather(for location: String) async throws -> Weather {
         let locationURL = K.baseURL + "&q=" + location
         guard let url = URL(string: locationURL) else {
@@ -30,7 +28,7 @@ struct WeatherService {
             }
             
             let weather = try JSONDecoder().decode(Weather.self, from: data)
-            
+
             return weather
         }
         catch {

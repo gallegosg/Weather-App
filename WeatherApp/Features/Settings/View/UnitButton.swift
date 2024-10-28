@@ -10,15 +10,18 @@ import SwiftUI
 struct UnitButton: View {
     let selectedUnit: String
     let unit: String
+    @EnvironmentObject var settings: SettingsViewModel
+
     var body: some View {
         Button(action: {
-            print(unit)
+            settings.selectedUnit = unit
         }, label: {
             Text(unit)
-                .padding(.all, 5)
+                .padding(.all, 10)
                 .foregroundStyle(selectedUnit == unit ? .white : .blue)
                 .background(selectedUnit == unit ? .blue : .white)
         })
+        .buttonStyle(.plain)
     }
 }
 

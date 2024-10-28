@@ -12,6 +12,7 @@ import SwiftUI
 struct Weather: Codable {
     let location: Location
     let current: CurrentWeatherData
+    let forecast: Forecast
 }
 
 // MARK: - Current
@@ -61,7 +62,66 @@ struct CurrentWeatherData: Codable {
         case gustMph = "gust_mph"
         case gustKph = "gust_kph"
     }
+    
+    func temperature(for unit: String) -> String {
+        let temp = unit == K.imperial ? tempF : tempC
+        return String(format: "%.0f° %@", temp, unit)
+    }
+    func feelsLike(for unit: String) -> String {
+        let temp = unit == K.imperial ? feelslikeF : feelslikeC
+        return String(format: "%.0f° %@", temp, unit)
+    }
+    func windSpeed(for unit: String) -> String {
+        let wind = unit == K.imperial ? windMph : windKph
+        let speed = unit == K.imperial ? "mph" : "kph"
+        return String(format: "%.0f %@", wind, speed)
+    }
+    
+    func precipitation(for unit: String) -> String {
+        let prec = unit == K.imperial ? precipIn : precipMm
+        let height = unit == K.imperial ? "in" : "mm"
+        return String(format: "%.0f%@", prec, height)
+    }
 }
+
+extension CurrentWeatherData {
+    static let dummy = CurrentWeatherData(
+        lastUpdatedEpoch: 1695462000,
+        lastUpdated: "2024-09-23 11:00",
+        tempC: 18.3,
+        tempF: 64.9,
+        isDay: 1,
+        condition: Condition(
+            text: "Partly Cloudy",
+            icon: "//cdn.weatherapi.com/weather/64x64/day/116.png",
+            code: 1003
+        ),
+        windMph: 10.0,
+        windKph: 16.1,
+        windDegree: 200,
+        windDir: "SSW",
+        pressureMB: 1012.0,
+        pressureIn: 29.88,
+        precipMm: 0.0,
+        precipIn: 0.0,
+        humidity: 78,
+        cloud: 40,
+        feelslikeC: 18.3,
+        feelslikeF: 64.9,
+        windchillC: 18.3,
+        windchillF: 64.9,
+        heatindexC: 18.3,
+        heatindexF: 64.9,
+        dewpointC: 14.2,
+        dewpointF: 57.6,
+        visKM: 10.0,
+        visMiles: 6.2,
+        uv: 5.0,
+        gustMph: 12.5,
+        gustKph: 20.1
+    )
+}
+
 
 // MARK: - Condition
 struct Condition: Codable {
@@ -90,27 +150,15 @@ struct Location: Codable {
     }
 }
 
-//import Foundation
-//
-//struct Weather: Codable {
-//    let location: WeatherLocation
-//    let current: Current
-//    
-//    struct WeatherLocation: Codable {
-//        let name: String
-//        let region: String
-//        let country: String
-//    }
-//    
-//    struct Current: Codable {
-//        let tempF: Double
-//        let feelsLikeF: Double
-//        let condition: Condition
-//    }
-//    
-//    struct Condition: Codable {
-//        let text: String
-//        let icon: String
-//        let code: Int
-//    }
-//}
+extension Location {
+    static let dummy = Location(
+        name: "San Francisco",
+        region: "California",
+        country: "USA",
+        lat: 37.7749,
+        lon: -122.4194,
+        tzID: "America/Los_Angeles",
+        localtimeEpoch: 1695465600,
+        localtime: "2024-09-23 12:00"
+    )
+}
