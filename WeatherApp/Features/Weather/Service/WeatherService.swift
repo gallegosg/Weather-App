@@ -15,6 +15,7 @@ struct WeatherService {
         }
         
         do {
+            URLCache.shared.removeAllCachedResponses()
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let httpResonse = response as? HTTPURLResponse else {
                 throw WeatherError.invalidResponse(error: "Invalid response")

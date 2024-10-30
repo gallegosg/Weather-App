@@ -86,10 +86,6 @@ class WeatherViewModel: ObservableObject {
         locationManager.requestLocation()
     }
     
-    func handleFirstAppear() {
-        fetchCurrentLocation()
-    }
-    
     func handleAuthChange() {
         //switch case for each authorizationStatus state
         switch authorizationStatus {
