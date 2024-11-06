@@ -78,9 +78,20 @@ struct CurrentWeather: View {
         }
         .padding(10)
         .scrollIndicators(.hidden)
+        .background(Color.blue.opacity(0.1))
         .refreshable {
             Task {
                 await vm.fetchWeather(for: "\(loc.name), \(loc.region)", isCurrentLocation: vm.isCurrentLocation)
+            }
+        }
+        .overlay {
+            ZStack {
+                Color(white: 0, opacity: 0.75)
+                VStack {
+                    TextField("Search", text: $vm.searchText)
+                    Text("test")
+                    Spacer()
+                }
             }
         }
     }

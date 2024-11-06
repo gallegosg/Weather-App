@@ -4,6 +4,7 @@
 //
 //  Created by Gerardo Gallegos on 9/25/24.
 //
+//  BUG: When switching tabs, there is a leftover blank space where the keyboard used to be
 
 import SwiftUI
 import SwiftData
@@ -15,27 +16,38 @@ struct Locations: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var selectedTab: Tab
     @State private var showAlert: Bool = false
-
+    
     var body: some View {
-        ScrollView {
-            Button(action: {
-                Task {
-                    await handleLocationsCurrentLocationButton()
-                }
-            }, label: {
-                CurrentLocationRow()
-            })
-            ForEach(favorites) { favorite in
+        GeometryReader { geo in
+            ScrollView {
                 Button(action: {
                     Task {
-                        await vm.fetchWeather(for: "\(favorite.name),  \(favorite.region)")
+                        await handleLocationsCurrentLocationButton()
                     }
-                    selectedTab = .weather
                 }, label: {
-                    LocationRow(location: favorite)
+                    CurrentLocationRow()
                 })
-                .foregroundStyle(.primary)
+                if favorites.count > 0 {
+                    ForEach(favorites) { favorite in
+                        Button(action: {
+                            Task {
+                                await vm.fetchWeather(for: "\(favorite.name),  \(favorite.region)")
+                            }
+                            selectedTab = .weather
+                        }, label: {
+                            LocationRow(location: favorite)
+                        })
+                        .foregroundStyle(.primary)
+                    }
+                } else {
+                    EmptyLocations()
+                    .frame(height: geo.size.height / 2)
+                }
+                
             }
+            .padding()
+            .background(Color.blue.opacity(0.1))
+            .navigationTitle("Locations")
             .searchable(text: $vm.searchText, prompt: "Search for a location")
             .onSubmit(of: .search) {
                 UIApplication.shared.endEditing()
@@ -43,20 +55,17 @@ struct Locations: View {
                     await vm.fetchWeather()
                 }
             }
-                    
+            .overlay {
+                if vm.isLoading{
+                    ZStack {
+                        Color(white: 0, opacity: 0.75)
+                        ProgressView().tint(.white)
+                    }
+                }
+            }
+            .alert(isPresented: $showAlert, content: { noPermissionsAlert() })
+            .alert(isPresented: $vm.noLocationFound, content: {noLocationsAlert() })
         }
-        .padding()
-        .background(Color.blue.opacity(0.1))
-        .navigationTitle("Locations")
-        .alert(isPresented: $showAlert,
-               content: { noPermissionsAlert() })
-    }
-    
-    
-    func addItem() {
-        let item = FavoriteLocation(name: "San Francisco", region: "California", country: "United States of America")
-        
-        context.insert(item)
     }
     
     func handleLocationsCurrentLocationButton() async {
@@ -73,6 +82,13 @@ struct Locations: View {
         Alert(
             title: Text("No Location Access"),
             message: Text("Please authorize location access in Settings"),
+            dismissButton: .default(Text("Okay")))
+    }
+    
+    func noLocationsAlert() -> Alert {
+        Alert(
+            title: Text("No Location found"),
+            message: Text("Please search for another location"),
             dismissButton: .default(Text("Okay")))
     }
 }

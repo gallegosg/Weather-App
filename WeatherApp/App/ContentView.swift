@@ -10,39 +10,47 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var vm = WeatherViewModel(service: WeatherService(), locationManager: LocationManager())
     @StateObject private var networkManager = NetworkManager()
-
+    
     var body: some View {
         Group {
             if let hasInternet = networkManager.hasInternet, hasInternet {
-                TabView(selection: $vm.selectedTab) {
-                    WeatherTab(vm: vm)
-                    .tabItem {
-                        Label("Weather", systemImage: "sun.max.fill")
+                ZStack {
+                    Color.blue.opacity(0.1)
+                    TabView(selection: $vm.selectedTab) {
+                        WeatherTab(vm: vm)
+                            .tabItem {
+                                Label("Weather", systemImage: "sun.max.fill")
+                            }
+                            .toolbarBackground(Color.blue.opacity(0.1), for: .tabBar)
+                            .ignoresSafeArea(.keyboard, edges: .bottom)
+                            .tag(Tab.weather)
+                        
+                        
+                        NavigationStack {
+                            Locations(vm: vm, selectedTab: $vm.selectedTab)
+                        }
+                        .tabItem {
+                            Label("Locations", systemImage: "list.dash")
+                        }
+                        .tag(Tab.locations)
+                        
+                        NavigationStack {
+                            SettingsView(vm: vm)
+                        }
+                        .tabItem {
+                            Label("Settings", systemImage: "gear")
+                        }
+                        .tag(Tab.settings)
                     }
-                    .tag(Tab.weather)
-                    
-                    
-                    NavigationStack {
-                        Locations(vm: vm, selectedTab: $vm.selectedTab)
-                    }
-                    .tabItem {
-                        Label("Locations", systemImage: "list.dash")
-                    }
-                    .tag(Tab.locations)
-                    
-                    NavigationStack {
-                        SettingsView(vm: vm)
-                    }
-                    .tabItem {
-                        Label("Settings", systemImage: "gear")
-                    }
-                    .tag(Tab.settings)
+                    .background(Color.blue.opacity(0.1))
+                    .toolbarBackground(Color.blue.opacity(0.1), for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
                 }
             } else {
                 NoInternetView()
             }
         }
-        .background(Color.blue.opacity(0.1))
+        //        .background(Color.blu.opacity(0.1))
         .onAppear {
             networkManager.start()
         }

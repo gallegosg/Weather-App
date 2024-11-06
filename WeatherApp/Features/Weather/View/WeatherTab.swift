@@ -24,6 +24,9 @@ struct WeatherTab: View {
                 Text("No location selected.")
             }
         }
+        .onAppear {
+            UIApplication.shared.endEditing()
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.blue.opacity(0.1))
     }

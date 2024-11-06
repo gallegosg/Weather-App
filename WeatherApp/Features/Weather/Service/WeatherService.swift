@@ -25,7 +25,11 @@ struct WeatherService {
             
             if errorRange.contains(httpResonse.statusCode)	 {
                 let badRequest = try JSONDecoder().decode(BadRequest.self, from: data)
-                throw WeatherError.invalidResponse(error: badRequest.error.message)
+                if badRequest.error.code == 1006 {
+                    throw WeatherError.locationNotFound
+                } else {
+                    throw WeatherError.invalidResponse(error: badRequest.error.message)
+                }
             }
             
             let weather = try JSONDecoder().decode(Weather.self, from: data)

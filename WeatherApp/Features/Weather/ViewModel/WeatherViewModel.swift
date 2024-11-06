@@ -41,7 +41,6 @@ class WeatherViewModel: ObservableObject {
     @Published var forecast: [ForecastDay]?
     @Published var error: String? {
         didSet {
-            print(error)
             isLoading = false
         }
     }
@@ -49,6 +48,7 @@ class WeatherViewModel: ObservableObject {
     @Published var isCurrentLocation: Bool = false
     @Published var hasLocationAuth: Bool = false
     @Published var selectedTab: Tab = .weather
+    @Published var noLocationFound: Bool = false
     
     init(service: WeatherService, locationManager: LocationManager){
         self.service = service
@@ -60,6 +60,7 @@ class WeatherViewModel: ObservableObject {
     func fetchWeather(for loc: String? = nil, isCurrentLocation: Bool = false) async {
         error = nil
         isLoading = true
+        noLocationFound = false
         defer { isLoading = false }
         do {
             let weather = try await service.fetchCurrentWeather(for: (loc != nil) ? loc! : searchText)
@@ -68,8 +69,13 @@ class WeatherViewModel: ObservableObject {
             forecast = weather.forecast.forecastDay
             self.isCurrentLocation = isCurrentLocation
             selectedTab = .weather
-        } catch let error as WeatherError { 
-            self.error = error.errorMessage
+        } catch let error as WeatherError {
+            switch error {
+            case .locationNotFound:
+                noLocationFound = true
+            default:
+                self.error = error.errorMessage
+            }
         } catch {
             self.error = error.localizedDescription
         }
@@ -104,6 +110,10 @@ class WeatherViewModel: ObservableObject {
         default:
             print("default")
         }
+    }
+    
+    func resetLocationFound() {
+        noLocationFound = false
     }
 }
 
