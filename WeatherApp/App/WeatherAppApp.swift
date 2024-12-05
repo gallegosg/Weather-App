@@ -16,6 +16,8 @@ struct WeatherAppApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(settings)
+                .environment(\.locale, .init(identifier: "en"))
+            
         }
         .modelContainer(for: FavoriteLocation.self)
     }

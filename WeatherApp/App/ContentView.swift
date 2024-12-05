@@ -11,46 +11,65 @@ struct ContentView: View {
     @StateObject private var vm = WeatherViewModel(service: WeatherService(), locationManager: LocationManager())
     @StateObject private var networkManager = NetworkManager()
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.stackedLayoutAppearance.selected.iconColor = UIColor.white
+        appearance.backgroundEffect = UIBlurEffect(style: .systemThinMaterialDark)
+        appearance.stackedLayoutAppearance.normal.iconColor = UIColor.gray
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        
+        UITabBar.appearance().backgroundColor = UIColor(Color.gray.opacity(0.3))
+    }
+    
     var body: some View {
         Group {
             if let hasInternet = networkManager.hasInternet, hasInternet {
                 ZStack {
-                    Color.blue.opacity(0.1)
                     TabView(selection: $vm.selectedTab) {
-                        WeatherTab(vm: vm)
-                            .tabItem {
-                                Label("Weather", systemImage: "sun.max.fill")
-                            }
-                            .toolbarBackground(Color.blue.opacity(0.1), for: .tabBar)
-                            .ignoresSafeArea(.keyboard, edges: .bottom)
-                            .tag(Tab.weather)
-                        
+                        NavigationStack {
+                            WeatherTab(vm: vm)
+                        }
+                        .tabItem {
+                            Image(systemName: "sun.max.fill")
+                        }
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
+                        .tag(Tab.weather)
+                        .accessibilityLabel(String(localized:"Weather"))
+                        .foregroundStyle(.white)
+
                         
                         NavigationStack {
                             Locations(vm: vm, selectedTab: $vm.selectedTab)
                         }
                         .tabItem {
-                            Label("Locations", systemImage: "list.dash")
+                            Image(systemName: "star.fill")
                         }
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
                         .tag(Tab.locations)
+                        .accessibilityLabel(String(localized: "Favorites"))
                         
                         NavigationStack {
                             SettingsView(vm: vm)
                         }
                         .tabItem {
-                            Label("Settings", systemImage: "gear")
+                            Image(systemName: "gear")
                         }
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
                         .tag(Tab.settings)
+                        .accessibilityLabel(String(localized: "Settings"))
+
                     }
-                    .background(Color.blue.opacity(0.1))
-                    .toolbarBackground(Color.blue.opacity(0.1), for: .tabBar)
-                    .toolbarBackground(.visible, for: .tabBar)
                 }
-            } else {
+            } else if networkManager.isFirstOpen {
+                ProgressView()
+            }
+            else {
                 NoInternetView()
             }
         }
-        //        .background(Color.blu.opacity(0.1))
         .onAppear {
             networkManager.start()
         }

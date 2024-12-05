@@ -21,7 +21,6 @@ class NetworkManager: ObservableObject {
     //start monitorering network connectivity
     func start() {
         let queue = DispatchQueue(label: "NetworkMonitor")
-        print("started")
         monitor.start(queue: queue)
     }
     
@@ -32,12 +31,10 @@ class NetworkManager: ObservableObject {
                 Task { @MainActor in
                     self.hasInternet = true
                 }
-                print("Internet connection is available.")
             } else {
                 Task { @MainActor in
                     self.hasInternet = false
                 }
-                print("Internet connection is not available.")
             }
         }
     }

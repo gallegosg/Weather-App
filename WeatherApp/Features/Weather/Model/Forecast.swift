@@ -48,10 +48,15 @@ struct ForecastDay: Codable, Identifiable {
         return unit == K.imperial ? highAndLowF : highAndLowC
     }
     
-    var hoursLeft: [Hour] {
-        return hour.filter({ $0.timeEpoch > (Date().timeIntervalSince1970 - 3600)})
+    //    var hoursLeft: [Hour] {
+    //        return hour.filter({ $0.timeEpoch > (Date().timeIntervalSince1970 - 3600)})
+    //    }
+    
+    func hoursLeft(for localTime: String, epoch: Int) -> [Hour] {
+        hour.filter({ $0.timeEpoch > Double(epoch)})
     }
-
+    
+    
     enum CodingKeys: String, CodingKey {
         case date
         case dateEpoch = "date_epoch"
@@ -99,15 +104,17 @@ struct Hour: Codable, Identifiable {
     
     let time: String
     
-    var timeHour: String {
+    func timeHour(for timeZone: String) -> String {
         let timeInterval: TimeInterval = timeEpoch
-
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
-
+        if let timeZone = TimeZone(identifier: timeZone) {
+            formatter.timeZone = timeZone
+        } else {
+            formatter.timeZone = .current
+        }
         let date = Date(timeIntervalSince1970: timeInterval)
         let timeString = formatter.string(from: date)
-
         return timeString
     }
     

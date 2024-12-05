@@ -17,10 +17,11 @@ struct LocationRow: View {
                 .font(.subheadline)
             Spacer()
         }
-        .frame(height: 40)
-        .padding()
+        .padding(.vertical, 20)
+        .padding(.horizontal, 10)
         .background(Color.white.opacity(0.2))
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+        .accessibilityHint(String(localized: "Selects the location"))
     }
 }
 

@@ -9,16 +9,19 @@ import SwiftUI
 
 struct ForecastView: View {
     let forecastDays: [ForecastDay]
+    let localTime: String
+    let epoch: Int
+    let timeZone: String
     var body: some View {
         VStack {
-            Text("Today")
+            Text(String(localized: "Today"))
+                .fontWeight(.semibold)
                 .font(.title)
-                .bold()
             ScrollView(.horizontal) {
                 HStack {
                     if let day = forecastDays.first {
-                        ForEach(day.hoursLeft) { hour in
-                            ForecastHourView(hour: hour)
+                        ForEach(day.hoursLeft(for: localTime, epoch: epoch)) { hour in
+                            ForecastHourView(hour: hour, timeZone: timeZone)
                         }
                     }
                 }
@@ -29,5 +32,6 @@ struct ForecastView: View {
 }
 
 #Preview {
-    ForecastView(forecastDays: [])
+    ForecastView(forecastDays: [], localTime: "2024-11-24 21:36", epoch: 234234, timeZone: "America/Los_Angeles")
+        .environmentObject(SettingsViewModel())
 }

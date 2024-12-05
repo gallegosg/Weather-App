@@ -9,17 +9,18 @@ import SwiftUI
 
 struct ForecastHourView: View {
     var hour: Hour
+    var timeZone: String
     @EnvironmentObject var settings: SettingsViewModel
 
     var body: some View {
         VStack {
             VStack {
-                Text(hour.timeHour)
+                Text(hour.timeHour(for: timeZone))
                     .font(.headline)
                 
                 hour.condition.image
                     .resizable()
-                    .foregroundStyle(.teal, .orange)
+                    .foregroundStyle(hour.condition.iconColor.0, hour.condition.iconColor.1)
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 25)
                 
@@ -27,13 +28,14 @@ struct ForecastHourView: View {
                     .font(.system(size: 25))
             }
         }
-        .frame(height: 100)
+        .frame(minHeight: 100)
         .padding(.horizontal, 15)
     }
 }
 
 #Preview {
-    ForecastHourView(hour: sampleHour)
+    ForecastHourView(hour: sampleHour, timeZone: "America/Los_Angeles")
+        .environmentObject(SettingsViewModel())
 }
 
 let sampleHour = Hour(

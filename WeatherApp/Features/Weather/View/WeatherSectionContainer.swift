@@ -12,9 +12,9 @@ struct WeatherSectionContainer<Content: View>: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-            }
+//            HStack {
+//                Spacer()
+//            }
             content
                 .padding()
         }

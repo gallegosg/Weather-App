@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 enum WeatherCondition {
     case sunny
@@ -76,6 +77,52 @@ enum WeatherCondition {
             return "cloud.snow"
         case .unknown:
             return "globe.americas.fill"
+        }
+    }
+    
+    var color: (primary: Color, secondary: Color) {
+        switch self {
+        case .sunny:
+            return (.yellow, .white)
+        case .cloudy:
+            return (.white, .white)
+        case .overcast:
+            return (.white, .white)
+        case .mist:
+            return (.white, Color(hex: 0x7A7A7A))
+        case .rain:
+            return (.white, Color(hex: 0x81CEFF))
+        case .snow:
+            return (.white, .blue)
+        case .sleet:
+            return (.white, .blue)
+        case .freezingRain:
+            return (.white, .blue)
+        case .thunderstorm:
+            return (.white, .yellow)
+        case .fog:
+            return (.white, .gray)
+        case .icePellets:
+            return (.white, .blue)
+        case .unknown:
+            return (.white, .white)
+        }
+    }
+    
+    var weatherGradients: [Color] {
+        switch self {
+        case .sunny: [.lightBlue, Color(hex: 0x058EB9), Color(hex: 0x036F90)]                   // Sunny: warm, bright tones
+        case .cloudy: [Color(hex: 0x7A7A7A), Color(hex: 0x5E5E5E), Color(hex: 0x979797)]                     // Cloudy: soft, muted grays
+        case .overcast: [.gray, Color(hex: 0x696969)]                    // Overcast: darker, consistent grays
+        case .mist: [Color(hex: 0x7A7A7A), Color(hex: 0x5E5E5E), Color(hex: 0x979797)] // Mist: very light grays
+        case .rain: [Color(hex:0x627E8A), Color(hex: 0x77939E), Color(hex: 0x4682B4)]                        // Rain: cool, deep blues
+        case .snow: [Color(hex: 0x8EACB7), .gray]                      // Snow: bright, frosty whites
+        case .sleet: [Color(hex: 0x75B3C9), Color(hex: 0x4682B4), .gray]         // Sleet: pale blue with gray
+        case .freezingRain: [Color(hex: 0x88CCE4), Color(hex: 0x4682B4)]       // Freezing Rain: icy blue with gray
+        case .thunderstorm: [Color(hex: 0x095C79), Color(hex: 0x540979), Color(hex: 0x737379)]              // Thunderstorm: dramatic blue to purple
+        case .fog: [Color(hex: 0xAEAEAF), Color(hex: 0x858585), Color(hex: 0x696969)] // Fog: soft, hazy grays
+        case .icePellets: [Color(hex: 0x53A7C3), .gray]                      // Ice Pellets: cold cyan with gray
+        case .unknown: [.gray, .black]
         }
     }
 }

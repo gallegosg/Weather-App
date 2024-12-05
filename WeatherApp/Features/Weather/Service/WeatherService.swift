@@ -9,7 +9,8 @@ import Foundation
 
 struct WeatherService {    
     func fetchCurrentWeather(for location: String) async throws -> Weather {
-        let locationURL = K.baseURL + "&q=" + location
+        let langStr = Locale.current.language.languageCode?.identifier ?? ""
+        let locationURL = K.baseURL + "&q=" + location + "&lang=" + langStr
         guard let url = URL(string: locationURL) else {
             throw WeatherError.invalidURL
         }

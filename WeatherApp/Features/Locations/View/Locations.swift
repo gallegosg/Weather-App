@@ -5,6 +5,7 @@
 //  Created by Gerardo Gallegos on 9/25/24.
 //
 //  BUG: When switching tabs, there is a leftover blank space where the keyboard used to be
+//  FIX: Move search to Weather tab
 
 import SwiftUI
 import SwiftData
@@ -23,6 +24,7 @@ struct Locations: View {
                 Button(action: {
                     Task {
                         await handleLocationsCurrentLocationButton()
+                        vm.selectedTab = .weather
                     }
                 }, label: {
                     CurrentLocationRow()
@@ -32,8 +34,8 @@ struct Locations: View {
                         Button(action: {
                             Task {
                                 await vm.fetchWeather(for: "\(favorite.name),  \(favorite.region)")
+                                vm.selectedTab = .weather
                             }
-                            selectedTab = .weather
                         }, label: {
                             LocationRow(location: favorite)
                         })
@@ -47,24 +49,8 @@ struct Locations: View {
             }
             .padding()
             .background(Color.blue.opacity(0.1))
-            .navigationTitle("Locations")
-            .searchable(text: $vm.searchText, prompt: "Search for a location")
-            .onSubmit(of: .search) {
-                UIApplication.shared.endEditing()
-                Task {
-                    await vm.fetchWeather()
-                }
-            }
-            .overlay {
-                if vm.isLoading{
-                    ZStack {
-                        Color(white: 0, opacity: 0.75)
-                        ProgressView().tint(.white)
-                    }
-                }
-            }
+            .navigationTitle(String(localized: "Locations"))
             .alert(isPresented: $showAlert, content: { noPermissionsAlert() })
-            .alert(isPresented: $vm.noLocationFound, content: {noLocationsAlert() })
         }
     }
     
@@ -80,17 +66,12 @@ struct Locations: View {
     
     func noPermissionsAlert() -> Alert {
         Alert(
-            title: Text("No Location Access"),
-            message: Text("Please authorize location access in Settings"),
-            dismissButton: .default(Text("Okay")))
+            title: Text(String(localized: "No Location Access")),
+            message: Text(String(localized: "Please authorize location access in Settings")),
+            dismissButton: .default(Text(String(localized: "Okay"))))
     }
     
-    func noLocationsAlert() -> Alert {
-        Alert(
-            title: Text("No Location found"),
-            message: Text("Please search for another location"),
-            dismissButton: .default(Text("Okay")))
-    }
+
 }
 
 #Preview {

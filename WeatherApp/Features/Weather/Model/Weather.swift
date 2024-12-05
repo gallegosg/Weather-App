@@ -77,10 +77,10 @@ struct CurrentWeatherData: Codable {
         return String(format: "%.0f %@", wind, speed)
     }
     
-    func precipitation(for unit: String) -> String {
-        let prec = unit == K.imperial ? precipIn : precipMm
-        let height = unit == K.imperial ? "in" : "mm"
-        return String(format: "%.0f%@", prec, height)
+    func visibility(for unit: String) -> String {
+        let vis = unit == K.imperial ? visMiles : visKM
+        let units = unit == K.imperial ? "mi" : "km"
+        return String(format: "%.0f %@", vis, units)
     }
 }
 
@@ -127,9 +127,18 @@ extension CurrentWeatherData {
 struct Condition: Codable {
     let text, icon: String
     let code: Int
-    
+        
     var image: Image {
         Image(systemName: WeatherCondition.from(code: code).imageName)
+    }
+    
+    var iconColor: (Color, Color) {
+        WeatherCondition.from(code: code).color
+    }
+    
+    var gradients: [Color] {
+        WeatherCondition.from(code: code).weatherGradients
+        
     }
 }
 

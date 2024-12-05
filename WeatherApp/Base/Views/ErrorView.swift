@@ -10,7 +10,7 @@ import SwiftUI
 struct ErrorView: View {
     @State var error: String
     var body: some View {
-        Text("Something went wrong")
+        Text(String(localized: "Something went wrong"))
             .font(.headline)
         Text(error)
             .font(.subheadline)

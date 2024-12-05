@@ -8,23 +8,29 @@
 import SwiftUI
 
 struct UnitButton: View {
-    let selectedUnit: String
     let unit: String
     @EnvironmentObject var settings: SettingsViewModel
+    
+    var label: String {
+        unit == "C" ? String(localized: "Celcius (°C)") : String(localized: "Fahrenheit (°F)")
+    }
 
     var body: some View {
-        Button(action: {
-            settings.selectedUnit = unit
-        }, label: {
-            Text(unit)
-                .padding(.all, 10)
-                .foregroundStyle(selectedUnit == unit ? .white : .blue)
-                .background(selectedUnit == unit ? .blue : .white)
-        })
-        .buttonStyle(.plain)
+        HStack {
+            Button(label) {
+                settings.selectedUnit = unit
+            }
+            .foregroundStyle(.primary)
+            Spacer()
+            if settings.selectedUnit == unit {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(Color.lightBlue)
+            }
+        }
     }
 }
 
 #Preview {
-    UnitButton(selectedUnit: "C", unit: "C")
+    UnitButton(unit: "C")
+        .environmentObject(SettingsViewModel())
 }

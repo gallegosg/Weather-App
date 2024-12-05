@@ -15,9 +15,9 @@ struct EmptyLocations: View {
                 .resizable()
                 .frame(width: 75, height: 75)
                 .padding()
-            Text("No favorite locations")
+            Text(String(localized: "No favorite locations"))
                 .font(.title)
-            Text("Search up top to get started!")
+            Text(String(localized: "Star a location to see it here!"))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }

@@ -21,14 +21,21 @@ struct WeatherTab: View {
             } else if let error = vm.error {
                 ErrorView(error: error)
             } else {
-                Text("No location selected.")
+                Text(String(localized: ("No location selected.")))
             }
         }
         .onAppear {
             UIApplication.shared.endEditing()
+            
+            let appearance = UINavigationBarAppearance()
+            appearance.titleTextAttributes = [
+                    .foregroundColor: UIColor.white,
+                    .font: UIFont.boldSystemFont(ofSize: 20)
+                ]
+            
+                UINavigationBar.appearance().standardAppearance = appearance
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.blue.opacity(0.1))
     }
 }
 

@@ -14,9 +14,9 @@ struct NoInternetView: View {
                 .resizable()
                 .frame(width: 75, height: 75)
                 .padding()
-            Text("No Internet Connection")
+            Text(String(localized: "No Internet Connection"))
                 .font(.title)
-            Text("Please check your internet connection and try again.")
+            Text(String(localized: "Please check your internet connection and try again."))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }

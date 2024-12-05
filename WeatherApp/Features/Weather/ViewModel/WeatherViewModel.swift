@@ -50,6 +50,8 @@ class WeatherViewModel: ObservableObject {
     @Published var selectedTab: Tab = .weather
     @Published var noLocationFound: Bool = false
     
+    @Published var isSearchOverlayActive = true
+
     init(service: WeatherService, locationManager: LocationManager){
         self.service = service
         self.locationManager = locationManager
@@ -68,7 +70,8 @@ class WeatherViewModel: ObservableObject {
             location = weather.location
             forecast = weather.forecast.forecastDay
             self.isCurrentLocation = isCurrentLocation
-            selectedTab = .weather
+            searchText = ""
+            isSearchOverlayActive = false
         } catch let error as WeatherError {
             switch error {
             case .locationNotFound:
@@ -101,7 +104,6 @@ class WeatherViewModel: ObservableObject {
             locationManager.requestLocation()
         case .notDetermined:
             isLoading = true
-            print("not determined")
         case .restricted:
             print("restricted")
         case .denied:
