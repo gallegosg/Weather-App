@@ -136,7 +136,7 @@ struct Hour: Codable, Identifiable {
     
     func temperature(for unit: String) -> String {
         let temp = unit == K.imperial ? tempF : tempC
-        return String(format: "%.0f° %@", temp, unit)
+        return String(format: "%.0f°", temp)
     }
 
     enum CodingKeys: String, CodingKey {

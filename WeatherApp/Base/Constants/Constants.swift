@@ -17,7 +17,7 @@ enum K {
     static let tempUnitKey = "unit"
     
     //Info
-    static let appEmail = "email@email.com"
+    static let appEmail = "shastyapps@gmail.com"
     static let emailSubject = "Weather App Feedback"
     static let emailBody = "I would like to share some feedback about your app..."
 }

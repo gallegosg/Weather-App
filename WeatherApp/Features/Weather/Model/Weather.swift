@@ -65,11 +65,13 @@ struct CurrentWeatherData: Codable {
     
     func temperature(for unit: String) -> String {
         let temp = unit == K.imperial ? tempF : tempC
-        return String(format: "%.0f° %@", temp, unit)
+//        return String(format: "%.0f° %@", temp, unit)
+        return String(format: "%.0f°", temp)
+
     }
     func feelsLike(for unit: String) -> String {
         let temp = unit == K.imperial ? feelslikeF : feelslikeC
-        return String(format: "%.0f° %@", temp, unit)
+        return String(format: "%.0f°", temp)
     }
     func windSpeed(for unit: String) -> String {
         let wind = unit == K.imperial ? windMph : windKph
